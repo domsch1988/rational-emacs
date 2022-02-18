@@ -1,0 +1,10 @@
+* Default
+** .config
+ - path :: ~/.config
+** .ssh
+ - path :: ~/.ssh
+** Dev
+ - path :: d:/Dev
+* ansible
+** ansible-config
+ - path :: d:/ansible-config

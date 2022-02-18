@@ -1,0 +1,7 @@
+;;;; My Personal Modeline Configuration
+
+(setq mode-line-format
+      (list
+       '(" %m ")))
+
+(provide 'domsch-modeline)
