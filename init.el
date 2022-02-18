@@ -87,3 +87,16 @@ straight.el or Guix depending on the value of
 
 ;; Make GC pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" "c3595dd3ec6ebc2651127d3452b357dfc48613a4806e0630f288ce62cb068f54" "860a2d0be28108334c92c07ad4293ad8b4138ef5d5af700e754974401a9ad753" "34235be96d680dee818d58371286aed3c13441f287156bb03f302c46637bcfca" default)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

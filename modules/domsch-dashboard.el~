@@ -1,0 +1,24 @@
+;;; domsch-dashboard.el ---                          -*- lexical-binding: t; -*-
+(straight-use-package 'dashboard)
+
+(dashboard-setup-startup-hook)
+
+(setq dashboard-center-content t
+  dashboard-show-shortcuts nil
+  dashboard-startup-banner "~/.config/emacs/banner.png"
+  dashboard-set-heading-icons t
+  dashboard-set-file-icons t
+  dashboard-set-navigator t)
+(setq dashboard-items 'nil)
+(setq dashboard-init-info "Welcome to the (lisp) machine")
+(setq dashboard-footer-messages 'nil)
+
+(defun dashboard-insert-info (list-size)
+  (insert "Find file             SPC f f\nFind bookmarks        SPC f b\nFind recent files     SPC f r"))
+
+(add-to-list 'dashboard-item-generators '(info . dashboard-insert-info))
+(add-to-list 'dashboard-items '(info) t)
+
+(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+
+(provide 'domsch-dashboard)
