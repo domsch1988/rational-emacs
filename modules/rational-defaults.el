@@ -1,5 +1,16 @@
 ;;; rational-defaults.el -*- lexical-binding: t; -*-
 
+;; Copyright (C) 2022
+;; SPDX-License-Identifier: MIT
+
+;; Author: System Crafters Community
+
+;; Commentary
+
+;; General sane defaults
+
+;;; Code:
+
 ;; Revert Dired and other buffers
 (customize-set-variable 'global-auto-revert-non-file-buffers t)
 
@@ -34,4 +45,8 @@
 ;; Make shebang (#!) file executable when saved
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
+;; Enable savehist-mode for an command history
+(savehist-mode 1)
+
 (provide 'rational-defaults)
+;;; rational-defaults.el ends here

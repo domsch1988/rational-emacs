@@ -1,5 +1,16 @@
 ;;; rational-evil.el -*- lexical-binding: t; -*-
 
+;; Copyright (C) 2022
+;; SPDX-License-Identifier: MIT
+
+;; Author: System Crafters Community
+
+;; Commentary
+
+;; Evil mode configuration, for those who prefer `vi' keybindings.
+
+;;; Code:
+
 ;; Define configuration variables
 (defcustom rational-evil-discourage-arrow-keys nil
   "When t, prevent the use of arrow keys in normal state to
@@ -60,4 +71,7 @@ encourage the use of Vim-style movement keys (hjkl).")
                 term-mode))
   (add-to-list 'evil-emacs-state-modes mode))
 
+(evil-collection-init)
+
 (provide 'rational-evil)
+;;; rational-evil.el ends here

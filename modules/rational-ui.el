@@ -1,5 +1,17 @@
 ;;; rational-ui.el -*- lexical-binding: t; -*-
 
+;; Copyright (C) 2022
+;; SPDX-License-Identifier: MIT
+
+;; Author: System Crafters Community
+
+;; Commentary
+
+;; User interface customizations. Examples are the modeline and how
+;; help buffers are displayed.
+
+;;; Code:
+
 (straight-use-package 'all-the-icons)
 (straight-use-package 'doom-modeline)
 (straight-use-package 'doom-themes)
@@ -43,18 +55,61 @@ Use a plist with the same key names as accepted by `set-face-attribute'.")
 
 ;;;; Line Numbers
 
+(defcustom rational-ui-line-numbers-enabled-modes
+  '(conf-mode prog-mode)
+  "Modes which should display line numbers."
+  :type 'list
+  :group 'rational)
+
+(defcustom rational-ui-line-numbers-disabled-modes
+  '(org-mode)
+  "Modes which should not display line numbers.
+Modes derived from the modes defined in
+`rational-ui-line-number-enabled-modes', but should not display line numbers."
+  :type 'list
+  :group 'rational)
+
+(defun rational-ui--enable-line-numbers-mode ()
+  "Turn on line numbers mode.
+
+Used as hook for modes which should display line numbers."
+  (display-line-numbers-mode 1))
+
+(defun rational-ui--disable-line-numbers-mode ()
+  "Turn off line numbers mode.
+
+Used as hook for modes which should not display line numebrs."
+  (display-line-numbers-mode -1))
+
+(defun rational-ui--update-line-numbers-display ()
+  "Update configuration for line numbers display."
+  (if rational-ui-display-line-numbers
+      (progn
+        (dolist (mode rational-ui-line-numbers-enabled-modes)
+          (add-hook (intern (format "%s-hook" mode))
+                    #'rational-ui--enable-line-numbers-mode))
+        (dolist (mode rational-ui-line-numbers-disabled-modes)
+          (add-hook (intern (format "%s-hook" mode))
+                    #'rational-ui--disable-line-numbers-mode))
+        (setq-default
+         display-line-numbers-grow-only t
+         display-line-numbers-type t
+         display-line-numbers-width 2))
+     (progn
+       (dolist (mode rational-ui-line-numbers-enabled-modes)
+         (remove-hook (intern (format "%s-hook" mode))
+                      #'rational-ui--enable-line-numbers-mode))
+       (dolist (mode rational-ui-line-numbers-disabled-modes)
+         (remove-hook (intern (format "%s-hook" mode))
+                      #'rational-ui--disable-line-numbers-mode)))))
+
 (defcustom rational-ui-display-line-numbers nil
   "Whether line numbers should be enabled."
-  :type 'boolean)
-
-(when rational-ui-display-line-numbers
-  (add-hook 'conf-mode-hook #'display-line-numbers-mode)
-  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-  (add-hook 'text-mode-hook #'display-line-numbers-mode)
-  (setq-default
-   display-line-numbers-grow-only t
-   display-line-numbers-type t
-   display-line-numbers-width 2))
+  :type 'boolean
+  :group 'rational
+  :set (lambda (sym val)
+         (set-default sym val)
+         (rational-ui--update-line-numbers-display)))
 
 ;;;; Elisp-Demos
 
@@ -73,3 +128,4 @@ Use a plist with the same key names as accepted by `set-face-attribute'.")
   (advice-add command :after #'pulse-line))
 
 (provide 'rational-ui)
+;;; rational-ui.el ends here

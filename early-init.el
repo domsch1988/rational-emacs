@@ -34,14 +34,45 @@
 (setq initial-major-mode 'fundamental-mode)
 
 ;; Find the user configuration path
+;; In order do these checks:
+;; * using chemacs?
+;; ** yes, and have specified a location with the RATIONAL_EMACS_HOME
+;;    environment variable
+;; ** yes, but no environment variable, assume the rational-emacs
+;;    folder in the profile
+;; * use RATIONAL_EMACS_HOME environment variable
+;; * XDG_CONFIG_HOME or the path .config/rational-emacs
+;;   exists. XDG_CONFIG_HOME usually defaults to $HOME/.config/, so
+;;   these are the same thing
+;; * use HOME environment variable
 (defvar rational-config-path
-  (let ((home-dir (getenv "HOME")))
-    (if (file-exists-p (expand-file-name ".rational-emacs" home-dir))
-      (expand-file-name ".rational-emacs" home-dir)
-    (expand-file-name ".config/rational-emacs" home-dir)))
+  (cond
+   ((featurep 'chemacs)
+    (if (getenv  "RATIONAL_EMACS_HOME")
+        (expand-file-name (getenv "RATIONAL_EMACS_HOME"))
+      (expand-file-name "rational-emacs" user-emacs-directory)))
+   ((getenv "RATIONAL_EMACS_HOME") (expand-file-name (getenv "RATIONAL_EMACS_HOME")))
+   ((or (getenv "XDG_CONFIG_HOME") (file-exists-p (expand-file-name ".config/rational-emacs" (getenv "HOME"))))
+    (if (getenv "XDG_CONFIG_HOME")
+	(expand-file-name "rational-emacs" (getenv "XDG_CONFIG_HOME"))
+      (expand-file-name ".config/rational-emacs" (getenv "HOME"))))
+   ((getenv "HOME") (expand-file-name ".rational-emacs" (getenv "HOME"))))
   "The user's rational-emacs configuration path.")
 
-(defvar rational-prefer-guix-packages nil
+(unless (file-exists-p rational-config-path)
+  (mkdir rational-config-path t))
+
+(defun rational-using-guix-emacs-p ()
+  "Verifies if the running emacs executable is under the `/gnu/store/' path."
+  (unless (or (equal system-type 'ms-dos)
+              (equal system-type 'windows-nt))
+    ;; Since there is no windows implementation of guix
+    (string-prefix-p "/gnu/store/"
+                     (file-truename
+                      (executable-find
+                       (car command-line-args))))))
+
+(defvar rational-prefer-guix-packages (rational-using-guix-emacs-p)
   "If t, expect packages to be installed via Guix by default.")
 
 ;; Load the early config file if it exists
